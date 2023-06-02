@@ -1,0 +1,36 @@
+name: 🦀 Tests
+
+on:
+  push:
+    branches: [ "main" ]
+    paths:
+      - "lib/**"
+      - "server/**"
+  pull_request:
+    branches: [ "main" ]
+    paths:
+      - "lib/**"
+      - "server/**"
+
+  workflow_dispatch:
+
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  checks:
+    name: 🦀 Check rust
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: 📦 Checkout repository
+      uses: actions/checkout@v3
+
+    - name: 🔨 Build
+      working-directory: ${{ matrix.folder }}
+      run: cargo build --release --verbose
+
+    - name: 📋 Run tests
+      working-directory: ${{ matrix.folder }}
+      run: cargo test --release --color=always >> $GITHUB_STEP_SUMMARY

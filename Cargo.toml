@@ -1,0 +1,6 @@
+[workspace]
+
+members = [
+    "machine-library",
+    "cli-tool"
+]
