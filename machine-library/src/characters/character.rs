@@ -59,6 +59,7 @@ const CHAR_A_UPPERCASE: u8 = b'A';
 const CHAR_A_LOWERCASE: u8 = b'a';
 
 impl From<char> for Character {
+    #[inline(always)]
     fn from(value: char) -> Self {
         let mut v: u8 = value as u8;
 
