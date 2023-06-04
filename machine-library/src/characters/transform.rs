@@ -16,8 +16,11 @@ pub trait CharacterTransform {
 /// Mapped to: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
 pub type MappingTable = str;
 
+pub const DEFAULT_MAPPING_TABLE: &MappingTable = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+pub const DEFAULT_REVERSE_MAPPING_TABLE: &MappingTable = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
+
 /// A struct that maps a character to another character. Used for either encryption or decryption.
-#[derive(Debug, Clone, Copy, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Transform {
     pub map: [u8; 26],
 }
@@ -67,7 +70,7 @@ impl Transform {
 
 #[cfg(test)]
 mod test {
-    use super::Transform;
+    use super::*;
     use std::mem::size_of;
 
     #[test]
@@ -77,8 +80,20 @@ mod test {
 
     #[test]
     pub fn test_to_and_from_table() {
-        let table = "ZYXWVUTSRQPONMLKJIHGFEDCBA";
+        let table = DEFAULT_REVERSE_MAPPING_TABLE;
         let transform = Transform::from_table(table);
         assert_eq!(transform.to_table(), table);
+    }
+
+    #[test]
+    pub fn test_transform() {
+        let table = DEFAULT_REVERSE_MAPPING_TABLE;
+        let transform = Transform::from_table(table);
+
+        for i in 0..26 {
+            let c = Character::from(i as u8);
+            let c = transform.transform_char(c);
+            assert_eq!(c, Character::from(25 - i as u8));
+        }
     }
 }
